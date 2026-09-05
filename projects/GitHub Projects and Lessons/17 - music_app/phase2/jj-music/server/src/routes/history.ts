@@ -25,7 +25,7 @@ router.get('/', authMiddleware, async (req: AuthRequest, res: Response) => {
     res.json({
       data: {
         items: entries.map(entry => {
-          const song = entry.songId as ISong;
+          const song = entry.songId as unknown as ISong;
           return {
             id: entry._id.toString(),
             songId: song._id.toString(),
@@ -81,7 +81,7 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
     await entry.save();
     await entry.populate('songId');
 
-    const populatedSong = entry.songId as ISong;
+    const populatedSong = entry.songId as unknown as ISong;
 
     res.status(201).json({
       data: {
