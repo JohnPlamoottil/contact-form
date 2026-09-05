@@ -6,19 +6,20 @@ import { Song } from '../models';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 import { config } from '../config';
-import type { Response } from 'express';
+import type { Response, NextFunction } from 'express';
+import type { RequestHandler } from 'express';
 
 const router = Router();
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (req: any, file: any, cb: any) => {
     const uploadDir = config.LOCAL_UPLOAD_DIR;
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
     cb(null, uploadDir);
   },
-  filename: (req, file, cb) => {
+  filename: (req: any, file: any, cb: any) => {
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(7);
     const ext = path.extname(file.originalname);
@@ -28,7 +29,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  fileFilter: (req, file, cb) => {
+  fileFilter: (req: any, file: any, cb: any) => {
     const allowed = ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/aac', 'audio/x-m4a'];
     if (!allowed.includes(file.mimetype)) {
       cb(new Error('Invalid file type'));
@@ -39,7 +40,7 @@ const upload = multer({
   limits: { fileSize: config.MAX_UPLOAD_MB * 1024 * 1024 },
 });
 
-router.post('/', authMiddleware, upload.single('file'), async (req: AuthRequest, res: Response, next) => {
+const uploadHandler: RequestHandler = async (req: any, res: Response, next: NextFunction) => {
   try {
     if (!req.file) {
       throw new AppError(400, 'No file provided');
@@ -48,7 +49,7 @@ router.post('/', authMiddleware, upload.single('file'), async (req: AuthRequest,
     const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : {};
 
     const song = new Song({
-      userId: req.userId,
+      userId: (req as AuthRequest).userId,
       title: metadata.title || req.file.originalname.replace(/\.[^.]+$/, ''),
       artist: metadata.artist || 'Unknown Artist',
       album: metadata.album || 'Uploaded Library',
@@ -86,6 +87,8 @@ router.post('/', authMiddleware, upload.single('file'), async (req: AuthRequest,
   } catch (err: any) {
     next(err);
   }
-});
+};
+
+router.post('/', authMiddleware, upload.single('file'), uploadHandler);
 
 export default router;

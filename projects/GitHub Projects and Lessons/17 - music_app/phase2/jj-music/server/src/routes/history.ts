@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { PlaybackHistory, Song } from '../models';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 import type { Response } from 'express';
+import type { ISong } from '../types';
 
 const router = Router();
 
@@ -23,34 +24,37 @@ router.get('/', authMiddleware, async (req: AuthRequest, res: Response) => {
 
     res.json({
       data: {
-        items: entries.map(entry => ({
-          id: entry._id.toString(),
-          songId: entry.songId._id.toString(),
-          song: {
-            id: entry.songId._id.toString(),
-            title: entry.songId.title,
-            artist: entry.songId.artist,
-            album: entry.songId.album,
-            genre: entry.songId.genre,
-            year: entry.songId.year,
-            trackNumber: entry.songId.trackNumber,
-            duration: entry.songId.duration,
-            artworkUrl: entry.songId.artworkUrl,
-            mimeType: entry.songId.mimeType,
-            fileSize: entry.songId.fileSize,
-            favorite: entry.songId.favorite,
-            playCount: entry.songId.playCount,
-            uploadedAt: entry.songId.uploadedAt.toISOString(),
-            lastPlayedAt: entry.songId.lastPlayedAt?.toISOString() || null,
-          },
-          playedAt: entry.playedAt.toISOString(),
-        })),
+        items: entries.map(entry => {
+          const song = entry.songId as ISong;
+          return {
+            id: entry._id.toString(),
+            songId: song._id.toString(),
+            song: {
+              id: song._id.toString(),
+              title: song.title,
+              artist: song.artist,
+              album: song.album,
+              genre: song.genre,
+              year: song.year,
+              trackNumber: song.trackNumber,
+              duration: song.duration,
+              artworkUrl: song.artworkUrl,
+              mimeType: song.mimeType,
+              fileSize: song.fileSize,
+              favorite: song.favorite,
+              playCount: song.playCount,
+              uploadedAt: song.uploadedAt.toISOString(),
+              lastPlayedAt: song.lastPlayedAt?.toISOString() || null,
+            },
+            playedAt: entry.playedAt.toISOString(),
+          };
+        }),
         total,
         page: pageNum,
         limit: limitNum,
       },
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({ error: 'Failed to fetch history' });
   }
 });
@@ -58,17 +62,14 @@ router.get('/', authMiddleware, async (req: AuthRequest, res: Response) => {
 router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { songId } = req.body;
-    if (!songId) {
-      return res.status(400).json({ error: 'songId required' });
-    }
 
     const song = await Song.findOne({ _id: songId, userId: req.userId });
     if (!song) {
       return res.status(404).json({ error: 'Song not found' });
     }
 
+    song.playCount += 1;
     song.lastPlayedAt = new Date();
-    song.playCount = (song.playCount || 0) + 1;
     await song.save();
 
     const entry = new PlaybackHistory({
@@ -78,16 +79,36 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
     });
 
     await entry.save();
+    await entry.populate('songId');
+
+    const populatedSong = entry.songId as ISong;
 
     res.status(201).json({
       data: {
         id: entry._id.toString(),
-        songId: entry.songId.toString(),
+        songId: populatedSong._id.toString(),
+        song: {
+          id: populatedSong._id.toString(),
+          title: populatedSong.title,
+          artist: populatedSong.artist,
+          album: populatedSong.album,
+          genre: populatedSong.genre,
+          year: populatedSong.year,
+          trackNumber: populatedSong.trackNumber,
+          duration: populatedSong.duration,
+          artworkUrl: populatedSong.artworkUrl,
+          mimeType: populatedSong.mimeType,
+          fileSize: populatedSong.fileSize,
+          favorite: populatedSong.favorite,
+          playCount: populatedSong.playCount,
+          uploadedAt: populatedSong.uploadedAt.toISOString(),
+          lastPlayedAt: populatedSong.lastPlayedAt?.toISOString() || null,
+        },
         playedAt: entry.playedAt.toISOString(),
       },
     });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to record playback' });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to record history' });
   }
 });
 
