@@ -8,6 +8,8 @@
     <meta name="description" content="Connect with Kanna John Plamoottil, Real Estate Broker Agent & Property Specialist. Get in touch to discuss your real estate goals." />
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./config.js"></script>
+    <script src="./config.js"></script>
   </head>
   <body>
     <div class="page__content">
@@ -204,7 +206,7 @@
 
       async function loadPortfolio() {
         try {
-          const response = await fetch('/api/portfolio');
+          const response = await fetch(CONFIG.API_URL + '/api/portfolio');
           const items = await response.json();
           displayPortfolio(items);
         } catch (error) {
