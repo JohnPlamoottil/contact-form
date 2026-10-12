@@ -136,3 +136,4 @@ For issues or questions, check the following:
 - Browser console for client-side errors
 - Ensure `uploads/` directory exists and is writable
 - Verify username and password are set correctly
+# Railway rebuild trigger
