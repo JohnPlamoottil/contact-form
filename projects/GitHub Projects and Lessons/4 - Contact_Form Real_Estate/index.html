@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact JJ Plamoottil - Real Estate Broker Agent</title>
+    <meta name="description" content="Connect with Kanna John Plamoottil, Real Estate Broker Agent & Property Specialist. Get in touch to discuss your real estate goals." />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page__content">
+      <header class="header">
+        <img
+          class="header__logo"
+          src="./images/brickstone logo.png"
+          alt="Brickstone Brokerage Logo"
+        />
+        <div class="header__intro">
+          <h1>Kanna John Plamoottil</h1>
+          <p class="header__title">Real Estate Broker Agent & Property Specialist</p>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="profile">
+          <img
+            src="./images/right front shot.png"
+            alt="Kanna John Plamoottil"
+            class="profile__image"
+          />
+          <div class="profile__info">
+            <h2>Let's Connect</h2>
+            <p>Ready to take the next step in your real estate journey? Contact me today, and let's make your real estate goals a reality.</p>
+            
+            <div class="contact-methods">
+              <div class="contact-item">
+                <span class="contact-label">Office Phone</span>
+                <a href="tel:+13129990217" class="contact-value">(312) 999-0217</a>
+              </div>
+              <div class="contact-item">
+                <span class="contact-label">Personal Phone</span>
+                <a href="tel:+18476659017" class="contact-value">847-665-9017</a>
+              </div>
+              <div class="contact-item">
+                <span class="contact-label">Email</span>
+                <a href="mailto:kjplamoottil.realtor@gmail.com" class="contact-value">kjplamoottil.realtor@gmail.com</a>
+              </div>
+              <div class="contact-item">
+                <span class="contact-label">Office Email</span>
+                <a href="mailto:sales@brickstonebrokerage.com" class="contact-value">sales@brickstonebrokerage.com</a>
+              </div>
+              <div class="contact-item">
+                <span class="contact-label">Office Address</span>
+                <p class="contact-value">1699 Wall St, Suite 118A<br>Mount Prospect, IL 60056</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section class="portfolio-showcase">
+          <div class="portfolio-header">
+            <h2>Portfolio</h2>
+            <p>View my latest real estate photography and drone footage</p>
+          </div>
+
+          <div class="portfolio-filters">
+            <button class="filter-btn active" onclick="filterPortfolio('all')">All</button>
+            <button class="filter-btn" onclick="filterPortfolio('interior')">Interior</button>
+            <button class="filter-btn" onclick="filterPortfolio('exterior')">Exterior</button>
+            <button class="filter-btn" onclick="filterPortfolio('wide-angle')">Wide Angle</button>
+            <button class="filter-btn" onclick="filterPortfolio('drone')">Drone</button>
+          </div>
+
+          <div id="portfolioGrid" class="portfolio-grid">
+            <div class="loading-placeholder">
+              <p>Loading portfolio...</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <form action="https://formspree.io/f/xzzprjvo" method="POST" class="contact-form">
+            <h2>Send a Message</h2>
+            <p class="form-description">Fill out the form below and I'll get back to you shortly.</p>
+
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input
+                type="text"
+                id="firstName"
+                name="first"
+                placeholder="John"
+                autocomplete="given-name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input
+                type="text"
+                id="lastName"
+                name="last"
+                placeholder="Smith"
+                autocomplete="family-name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="middleInitial">Middle Initial</label>
+              <input
+                type="text"
+                id="middleInitial"
+                name="middle"
+                placeholder="M"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input
+                type="tel"
+                id="phone"
+                name="mobile"
+                placeholder="(312) 999-0217"
+                autocomplete="tel"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="your@email.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message *</label>
+              <p class="form-hint">Please include: County (Illinois), desired price range, and whether you are a buyer, seller, or both.</p>
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                placeholder="Tell us about your real estate needs..."
+                autocomplete="off"
+                required
+              ></textarea>
+            </div>
+
+            <img src="./images/counties.png" alt="Illinois Northern Counties" class="counties-map" />
+
+            <button type="submit" class="btn-submit">Send Message</button>
+          </form>
+        </section>
+
+        <section class="qr-section">
+          <div class="qr-container">
+            <h3>Scan for License Verification</h3>
+            <img
+              src="./images/LICENSE QR CODE.png"
+              alt="License QR Code"
+              class="qr-code"
+            />
+          </div>
+          <div class="company-link">
+            <a href="https://brickstonebrokerage.com" target="_blank" class="btn-secondary">Visit Company Website</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__content">
+          <img
+            class="credentials-logo"
+            src="./images/credentials logo.png"
+            alt="Chicago Real Estate Board Credentials"
+          />
+          <p class="footer__copyright">
+            Kanna John Plamoottil © 2024 All Rights Reserved
+          </p>
+          <p class="footer__phone">
+            <a href="tel:+18476659017">847-665-9017</a>
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      let currentFilter = 'all';
+
+      // Load portfolio on page load
+      document.addEventListener('DOMContentLoaded', loadPortfolio);
+
+      async function loadPortfolio() {
+        try {
+          const response = await fetch('/api/portfolio');
+          const items = await response.json();
+          displayPortfolio(items);
+        } catch (error) {
+          console.error('Error loading portfolio:', error);
+          document.getElementById('portfolioGrid').innerHTML = 
+            '<p style="grid-column: 1/-1; text-align: center; color: #888;">Unable to load portfolio</p>';
+        }
+      }
+
+      function displayPortfolio(items) {
+        const grid = document.getElementById('portfolioGrid');
+        
+        if (items.length === 0) {
+          grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 3rem;">No portfolio items yet</p>';
+          return;
+        }
+
+        let filtered = currentFilter === 'all' 
+          ? items 
+          : items.filter(item => item.category === currentFilter);
+
+        grid.innerHTML = filtered.map(item => `
+          <div class="portfolio-card">
+            <div class="portfolio-media">
+              ${item.type === 'video' 
+                ? `<video controls><source src="${item.filepath}" /></video>`
+                : `<img src="${item.filepath}" alt="${item.title}" />`
+              }
+              <div class="portfolio-overlay">
+                <span class="portfolio-type">${item.type === 'video' ? '▶ VIDEO' : '🖼 PHOTO'}</span>
+              </div>
+            </div>
+            <div class="portfolio-card-info">
+              <div class="portfolio-badge">${formatCategory(item.category)}</div>
+              <h3>${item.title || 'Untitled'}</h3>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function filterPortfolio(category) {
+        currentFilter = category;
+        
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Reload display
+        loadPortfolio();
+      }
+
+      function formatCategory(category) {
+        const labels = {
+          'interior': 'Interior',
+          'exterior': 'Exterior',
+          'wide-angle': 'Wide Angle',
+          'drone': 'Drone'
+        };
+        return labels[category] || category;
+      }
+    </script>
+  </body>
+</html>
