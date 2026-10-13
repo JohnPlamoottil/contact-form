@@ -19,7 +19,20 @@ const __dirname = dirname(__filename);
 const uploadsDir = join(__dirname, 'uploads', 'portfolio');
 mkdirSync(uploadsDir, { recursive: true });
 
+const ALLOWED_ORIGINS = ['https://johnplamoottil.github.io', 'http://localhost:3000', 'http://127.0.0.1:5500'];
+
 // Middleware
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
 
