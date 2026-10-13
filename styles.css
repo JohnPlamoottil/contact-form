@@ -1,222 +1,602 @@
+/* Reset & Base Styles */
 * {
-  background-color: rgba(43, 40, 40, 0.357);
-  margin: 0 auto;
-  display: block;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+.page__content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
 .header {
-  width: 100%;
-  /* border-bottom: solid 1px rgba(185, 229, 10, 0.975); */
-  padding: 0px 0 0px 0;
-  flex-direction: center;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: white;
+  padding: 3rem 2rem;
+  text-align: center;
+  border-bottom: 4px solid #d4af37;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header__logo {
-  width: 325px;
-  height: 134px;
-  justify-content: center;
-  margin: 0 auto;
-  /* display: block; */
+  max-width: 200px;
+  height: auto;
+  margin: 0 auto 1.5rem;
+  display: block;
 }
 
-@media screen and (max-width: 620px) {
-  .header {
-    margin: 0 auto;
-    justify-content: center;
-  }
-
-  .header__logo {
-    width: 325px;
-    height: 134px;
-    justify-content: center;
-  }
+.header__intro h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
 }
 
-.profile {
-  display: flex;
-  max-width: 880px;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  flex-direction: row;
+.header__title {
+  font-size: 1.1rem;
+  color: #d4af37;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Main Content */
+.content {
+  flex: 1;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  justify-content: center;
+  padding: 2rem;
+}
+
+/* Profile Section */
+.profile {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 3rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .profile__image {
-  width: 272px;
-  height: 307px;
-  border-radius: 500%;
-}
-
-.profile__content {
-  display: grid;
-  /* margin: 22px 0 auto 30px; */
-  gap: 7px 18px;
-  grid-template-areas: "title button";
-  gap: 7px 18px;
-  grid-gap: 5px 18px;
-  grid-template-columns: minmax(auto, 373px) auto;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   display: block;
-  width: 163px;
-  height: 207px;
+  margin: 0 auto;
 }
 
-.profile__title {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  font-size: 42px;
+.profile__info h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.profile__info p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.contact-methods {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.contact-item {
+  border-left: 3px solid #d4af37;
+  padding-left: 1rem;
+}
+
+.contact-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.3rem;
+}
+
+.contact-value {
+  display: block;
+  font-size: 1.05rem;
+  color: #1a1a1a;
+  text-decoration: none;
   font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: 0em;
-  grid-area: title;
-  max-width: 375px;
-  margin: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
 
-h1 {
-  color: rgb(255, 0, 0);
-  padding-top: 1px;
-  text-align: center;
-  font-size: 60px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.contact-value:hover {
+  color: #d4af37;
 }
 
-h2 {
-  color: rgb(255, 221, 0);
-  padding-top: 0px;
-  text-align: center;
-  font-size: 99px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+/* Form Section */
+.form-section {
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 3rem;
 }
 
-h3 {
-  color: rgb(255, 226, 6);
-  padding-top: 10px;
-  text-align: center;
-  font-size: 25px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.contact-form h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
 }
 
-h4 {
-  color: rgb(253, 253, 253);
-  padding-top: 10px;
-  text-align: center;
-  font-size: 25px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.form-description {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1rem;
 }
 
-h5 {
-  color: rgb(255, 255, 255);
-  padding-top: 10px;
-  text-align: center;
-  font-size: 25px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.form-group {
+  margin-bottom: 1.5rem;
 }
 
-h6 {
-  color: rgb(255, 255, 255);
-  padding-top: 10px;
-  text-align: center;
-  font-size: 25px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
 }
 
-p {
-  color: rgb(251, 251, 251);
-  padding-top: 10px;
-  text-align: center;
-  font-size: 25px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.form-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0.5rem 0 0.8rem 0;
+  font-style: italic;
+  line-height: 1.5;
 }
 
-input {
-  background-color: rgb(255, 255, 255);
-  text-emphasis-color: black;
-  text-decoration-color: black;
-  width: 70%;
-  margin-left: 12%;
-  font-size: 20px;
-  padding: 16px 16px;
-  border-radius: 10px;
-  border-color: black;
-  margin-bottom: 20px;
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #d4af37;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 textarea {
-  background-color: rgb(237, 237, 237);
-  text-emphasis-color: black;
-  text-decoration-color: black;
-  width: 70%;
-  margin-left: 12%;
-  font-size: 20px;
-  padding: 16px 16px;
-  border-radius: 10px;
-  border-color: black;
-  margin-bottom: 25px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  resize: vertical;
+  min-height: 140px;
 }
 
-input:focus-within {
-  outline: none;
-  border-color: #5bd183;
-  border-width: 3px;
+.counties-map {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  margin: 2rem auto;
+  display: block;
+  border-radius: 8px;
 }
 
-textarea:focus-within {
-  outline: none;
-  border-color: #5bd183;
-  border-width: 3px;
+.btn-submit {
+  background: linear-gradient(135deg, #d4af37 0%, #c9a43f 100%);
+  color: #1a1a1a;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 2rem auto 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-button {
-  background-color: #5bd183;
-  border-radius: 20px;
-  border-color: black;
-  font-size: 22px;
-  padding: 10px 18px;
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* QR Section */
+.qr-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   text-align: center;
-  display: flex;
-  margin: auto;
 }
 
-button:hover {
-  opacity: 80%;
+.qr-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #1a1a1a;
+}
+
+.qr-code {
+  width: 180px;
+  height: auto;
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+
+.company-link {
+  margin-top: 2rem;
+}
+
+.btn-secondary {
+  display: inline-block;
+  background: #f0f0f0;
+  color: #1a1a1a;
+  border: 2px solid #d4af37;
+  padding: 0.85rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-secondary:hover {
+  background: #d4af37;
+  color: #1a1a1a;
+}
+
+/* Footer */
+.footer {
+  background: #1a1a1a;
+  color: white;
+  padding: 2rem;
+  margin-top: auto;
+  border-top: 3px solid #d4af37;
+}
+
+.footer__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.credentials-logo {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.footer__copyright {
+  color: #aaa;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.footer__phone a {
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.footer__phone a:hover {
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    padding: 2rem 1rem;
+  }
+
+  .header__intro h1 {
+    font-size: 1.8rem;
+  }
+
+  .header__title {
+    font-size: 1rem;
+  }
+
+  .profile {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .profile__image {
+    max-width: 300px;
+  }
+
+  .profile__info h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .contact-form h2 {
+    font-size: 1.5rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+  }
+
+  .btn-secondary {
+    display: block;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__intro h1 {
+    font-size: 1.5rem;
+  }
+
+  .header__title {
+    font-size: 0.9rem;
+  }
+
+  .profile__info h2 {
+    font-size: 1.3rem;
+  }
+
+  .profile__info p {
+    font-size: 0.95rem;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  textarea {
+    padding: 0.7rem 0.85rem;
+    font-size: 1rem;
+  }
+
+  .contact-form h2 {
+    font-size: 1.3rem;
+  }
+
+  .form-description {
+    font-size: 0.95rem;
+  }
+
+  .qr-code {
+    width: 150px;
+  }
+
+  .qr-container h3 {
+    font-size: 1.2rem;
+  }
+}
+
+/* Portfolio Showcase Section */
+.portfolio-showcase {
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 3rem;
+}
+
+.portfolio-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.portfolio-header h2 {
+  font-size: 2rem;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.portfolio-header p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.portfolio-filters {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.7rem 1.5rem;
+  border: 2px solid #ddd;
+  background: white;
+  color: #666;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  border-color: #d4af37;
+  color: #d4af37;
+}
+
+.filter-btn.active {
+  background: #d4af37;
+  color: #1a1a1a;
+  border-color: #d4af37;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.portfolio-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
   cursor: pointer;
 }
 
-footer {
-  color: black;
-  padding-top: 10px;
-  text-align: center;
-  font-size: 25px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.portfolio-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
 }
 
-@media screen and (max-width: 414px) {
-  .footer {
-    margin: 0 auto;
-    padding: 28px 0 32px;
-    size: 50px;
+.portfolio-media {
+  position: relative;
+  width: 100%;
+  padding-bottom: 75%;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.portfolio-media img,
+.portfolio-media video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portfolio-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.portfolio-card:hover .portfolio-overlay {
+  opacity: 1;
+}
+
+.portfolio-type {
+  background: #d4af37;
+  color: #1a1a1a;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.portfolio-card-info {
+  padding: 1.5rem;
+}
+
+.portfolio-badge {
+  display: inline-block;
+  background: #f0f0f0;
+  color: #666;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.portfolio-card-info h3 {
+  font-size: 1.1rem;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.loading-placeholder {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: #888;
+}
+
+/* Responsive Portfolio */
+@media (max-width: 768px) {
+  .portfolio-showcase {
+    padding: 1.5rem;
   }
-  .footer__logo {
-    margin: 0 auto;
-    padding: 28px 0 32px;
-    size: 50px;
+
+  .portfolio-filters {
+    gap: 0.5rem;
   }
-  .chicago-realtors-logo {
-    width: 100%;
+
+  .filter-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-btn {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  .portfolio-filters {
+    gap: 0.3rem;
   }
 }
