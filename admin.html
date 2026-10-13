@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Portfolio Manager</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./config.js"></script>
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .login-form {
+      background: white;
+      padding: 3rem 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      max-width: 400px;
+      margin: 4rem auto;
+      text-align: center;
+    }
+
+    .login-form h1 {
+      color: #1a1a1a;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-form p {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .login-form button {
+      width: 100%;
+      background: #d4af37;
+      color: #1a1a1a;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .login-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .admin-panel {
+      display: none;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .admin-header h1 {
+      font-size: 2rem;
+      color: #1a1a1a;
+    }
+
+    .logout-btn {
+      background: #d4af37;
+      color: #1a1a1a;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #c9a43f;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .tab-btn {
+      padding: 1rem 2rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #888;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      color: #d4af37;
+      border-bottom-color: #d4af37;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .upload-form {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .form-group input[type="file"] {
+      padding: 0.5rem;
+    }
+
+    .upload-btn {
+      background: #d4af37;
+      color: #1a1a1a;
+      border: none;
+      padding: 0.85rem 2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .upload-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .portfolio-item {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+    }
+
+    .portfolio-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .portfolio-thumb {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #f0f0f0;
+    }
+
+    .portfolio-info {
+      padding: 1rem;
+    }
+
+    .portfolio-category {
+      font-size: 0.85rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.3rem;
+    }
+
+    .portfolio-title {
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 0.5rem;
+      word-break: break-word;
+    }
+
+    .delete-btn {
+      width: 100%;
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 0.6rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .delete-btn:hover {
+      background: #cc0000;
+    }
+
+    .message {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      background: #d4f4dd;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #888;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f0f0f0;
+      border-top: 3px solid #d4af37;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Login Form -->
+    <div id="loginForm" class="login-form">
+      <h1>Admin Panel</h1>
+      <p>Enter your credentials to manage portfolio</p>
+      <form onsubmit="handleLogin(event)">
+        <input 
+          type="text" 
+          id="username" 
+          placeholder="Username" 
+          required 
+          autofocus
+        />
+        <input 
+          type="password" 
+          id="password" 
+          placeholder="Password" 
+          required 
+        />
+        <button type="submit">Login</button>
+      </form>
+      <div id="loginError" class="message error"></div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel">
+      <div class="admin-header">
+        <h1>Portfolio Manager</h1>
+        <a href="./" style="color: #d4af37; text-decoration: none; margin-right: 1rem; font-weight: 600;">← Back to Portfolio</a>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="upload" onclick="switchTab('upload', this)">Upload</button>
+        <button class="tab-btn" data-tab="manage" onclick="switchTab('manage', this)">Manage Portfolio</button>
+      </div>
+
+      <!-- Upload Tab -->
+      <div id="upload" class="tab-content active">
+        <div class="upload-form">
+          <h2>Upload Portfolio Item</h2>
+          <form onsubmit="handleUpload(event)" id="uploadForm">
+            <div class="form-group">
+              <label for="category">Category *</label>
+              <select id="category" required>
+                <option value="">Select category</option>
+                <option value="interior">Interior Shot</option>
+                <option value="exterior">Exterior Shot</option>
+                <option value="wide-angle">Wide Angle Shot</option>
+                <option value="drone">Drone Footage</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" id="title" placeholder="e.g., Modern Kitchen in Downtown Chicago" />
+            </div>
+
+            <div class="form-group">
+              <label for="file">File (JPG, PNG, MP4, MOV) *</label>
+              <input 
+                type="file" 
+                id="file" 
+                accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" 
+                required 
+              />
+            </div>
+
+            <button type="submit" class="upload-btn" id="submitBtn">Upload</button>
+          </form>
+          <div id="uploadMessage" class="message"></div>
+        </div>
+      </div>
+
+      <!-- Manage Tab -->
+      <div id="manage" class="tab-content">
+        <h2>Portfolio Items</h2>
+        <div id="portfolioList" class="portfolio-grid">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading portfolio...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let token = localStorage.getItem('adminToken');
+
+    // Check if already logged in
+    if (token) {
+      showAdminPanel();
+      loadPortfolio();
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch(CONFIG.API_URL + '/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          token = data.token;
+          localStorage.setItem('adminToken', token);
+          showAdminPanel();
+          loadPortfolio();
+        } else {
+          showMessage('loginError', 'Invalid username or password', 'error');
+        }
+      } catch (error) {
+        showMessage('loginError', 'Login failed: ' + error.message, 'error');
+      }
+    }
+
+    function showAdminPanel() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+    }
+
+    function showLoginForm() {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('adminPanel').style.display = 'none';
+      localStorage.removeItem('adminToken');
+    }
+
+    async function handleLogout() {
+      try {
+        await fetch(CONFIG.API_URL + '/api/admin/logout', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+      showLoginForm();
+    }
+
+    async function handleUpload(event) {
+      event.preventDefault();
+      const category = document.getElementById('category').value;
+      const title = document.getElementById('title').value;
+      const file = document.getElementById('file').files[0];
+
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('category', category);
+      formData.append('title', title || file.name);
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Uploading...';
+
+      try {
+        const response = await fetch(CONFIG.API_URL + '/api/admin/upload', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+
+        if (response.ok) {
+          showMessage('uploadMessage', 'Upload successful!', 'success');
+          document.getElementById('uploadForm').reset();
+          loadPortfolio();
+        } else {
+          const error = await response.json();
+          showMessage('uploadMessage', 'Upload failed: ' + error.error, 'error');
+        }
+      } catch (error) {
+        showMessage('uploadMessage', 'Upload error: ' + error.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Upload';
+      }
+    }
+
+    async function loadPortfolio() {
+      try {
+        const response = await fetch(CONFIG.API_URL + '/api/portfolio');
+        const items = await response.json();
+
+        const list = document.getElementById('portfolioList');
+        if (items.length === 0) {
+          list.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 2rem;">No items uploaded yet</p>';
+          return;
+        }
+
+        list.innerHTML = items.map(item => `
+          <div class="portfolio-item">
+            ${item.type === 'video' 
+              ? `<video class="portfolio-thumb" controls><source src="${item.filepath}" /></video>`
+              : `<img src="${item.filepath}" alt="${item.title}" class="portfolio-thumb" />`
+            }
+            <div class="portfolio-info">
+              <div class="portfolio-category">${item.category}</div>
+              <div class="portfolio-title">${item.title || 'Untitled'}</div>
+              <button class="delete-btn" onclick="deleteItem(${item.id})">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Load error:', error);
+      }
+    }
+
+    async function deleteItem(id) {
+      if (!confirm('Delete this item?')) return;
+
+      try {
+        const response = await fetch(`/api/admin/portfolio/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          loadPortfolio();
+        } else {
+          alert('Delete failed');
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    function switchTab(tabName, button) {
+      // Hide all tabs and buttons
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      // Show selected tab and mark button as active
+      document.getElementById(tabName).classList.add('active');
+      button.classList.add('active');
+    }
+
+    function showMessage(elementId, text, type) {
+      const el = document.getElementById(elementId);
+      el.textContent = text;
+      el.className = `message show ${type}`;
+      setTimeout(() => el.classList.remove('show'), 5000);
+    }
+  </script>
+</body>
+</html>
