@@ -144,7 +144,7 @@ function verifyAdmin(req, res, next) {
 
 // Upload portfolio item
 const uploadFiles = (req, res, next) => {
-  upload.array('file', 20)(req, res, (err) => {
+  upload.array('file', 100)(req, res, (err) => {
     if (err) return res.status(400).json({ error: err.message });
     next();
   });
