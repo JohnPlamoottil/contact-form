@@ -489,8 +489,8 @@
         list.innerHTML = items.map(item => `
           <div class="portfolio-item">
             ${item.type === 'video' 
-              ? `<video class="portfolio-thumb" controls><source src="${item.filepath}" /></video>`
-              : `<img src="${item.filepath}" alt="${item.title}" class="portfolio-thumb" />`
+              ? `<video class="portfolio-thumb" controls><source src="${CONFIG.API_URL}${item.filepath}" /></video>`
+              : `<img src="${CONFIG.API_URL}${item.filepath}" alt="${item.title}" class="portfolio-thumb" />`
             }
             <div class="portfolio-info">
               <div class="portfolio-category">${item.category}</div>
@@ -508,7 +508,7 @@
       if (!confirm('Delete this item?')) return;
 
       try {
-        const response = await fetch(`/api/admin/portfolio/${id}`, {
+        const response = await fetch(`${CONFIG.API_URL}/api/admin/portfolio/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });

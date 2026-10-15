@@ -4,7 +4,7 @@ import sqlite3 from 'sqlite3';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { mkdirSync, existsSync } from 'fs';
+import { mkdirSync, existsSync, unlink } from 'fs';
 import { createHash } from 'crypto';
 
 const app = express();
@@ -202,6 +202,7 @@ app.delete('/api/admin/portfolio/:id', verifyAdmin, (req, res) => {
 
     db.run('DELETE FROM portfolio WHERE id = ?', [id], (err) => {
       if (err) return res.status(500).json({ error: 'Failed to delete' });
+      unlink(join(__dirname, row.filepath), () => {});
       res.json({ success: true });
     });
   });

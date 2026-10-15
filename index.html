@@ -233,8 +233,8 @@
           <div class="portfolio-card">
             <div class="portfolio-media">
               ${item.type === 'video' 
-                ? `<video controls><source src="${item.filepath}" /></video>`
-                : `<img src="${item.filepath}" alt="${item.title}" />`
+                ? `<video controls><source src="${CONFIG.API_URL}${item.filepath}" /></video>`
+                : `<img src="${CONFIG.API_URL}${item.filepath}" alt="${item.title}" />`
               }
               <div class="portfolio-overlay">
                 <span class="portfolio-type">${item.type === 'video' ? '▶ VIDEO' : '🖼 PHOTO'}</span>
