@@ -69,11 +69,11 @@
           </div>
 
           <div class="portfolio-filters">
-            <button class="filter-btn active" onclick="filterPortfolio('all')">All</button>
-            <button class="filter-btn" onclick="filterPortfolio('interior')">Interior</button>
-            <button class="filter-btn" onclick="filterPortfolio('exterior')">Exterior</button>
-            <button class="filter-btn" onclick="filterPortfolio('wide-angle')">Wide Angle</button>
-            <button class="filter-btn" onclick="filterPortfolio('drone')">Drone</button>
+            <button class="filter-btn active" onclick="filterPortfolio('showings', this)">Showings</button>
+            <button class="filter-btn" onclick="filterPortfolio('interior', this)">Interior</button>
+            <button class="filter-btn" onclick="filterPortfolio('exterior', this)">Exterior</button>
+            <button class="filter-btn" onclick="filterPortfolio('wide-angle', this)">Wide Angle</button>
+            <button class="filter-btn" onclick="filterPortfolio('drone', this)">Drone</button>
           </div>
 
           <div id="portfolioGrid" class="portfolio-grid">
@@ -199,41 +199,44 @@
       </footer>
     </div>
 
-    <script>
-      let currentFilter = 'all';
+    <div id="lightbox" class="lightbox" hidden>
+      <button class="lightbox-close" aria-label="Close">&times;</button>
+      <div class="lightbox-content"></div>
+    </div>
 
-      // Load portfolio on page load
+    <script>
+      let currentFilter = 'showings';
+      let currentItems = [];
+      let visibleItems = [];
+
       document.addEventListener('DOMContentLoaded', loadPortfolio);
 
       async function loadPortfolio() {
         try {
           const response = await fetch(CONFIG.API_URL + '/api/portfolio');
-          const items = await response.json();
-          displayPortfolio(items);
+          currentItems = await response.json();
+          displayPortfolio();
         } catch (error) {
           console.error('Error loading portfolio:', error);
-          document.getElementById('portfolioGrid').innerHTML = 
+          document.getElementById('portfolioGrid').innerHTML =
             '<p style="grid-column: 1/-1; text-align: center; color: #888;">Unable to load portfolio</p>';
         }
       }
 
-      function displayPortfolio(items) {
+      function displayPortfolio() {
         const grid = document.getElementById('portfolioGrid');
-        
-        if (items.length === 0) {
-          grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 3rem;">No portfolio items yet</p>';
+        visibleItems = currentItems.filter(item => item.category === currentFilter);
+
+        if (visibleItems.length === 0) {
+          grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 3rem;">No items in this category yet</p>';
           return;
         }
 
-        let filtered = currentFilter === 'all' 
-          ? items 
-          : items.filter(item => item.category === currentFilter);
-
-        grid.innerHTML = filtered.map(item => `
-          <div class="portfolio-card">
+        grid.innerHTML = visibleItems.map((item, index) => `
+          <div class="portfolio-card" onclick="openLightbox(${index})">
             <div class="portfolio-media">
-              ${item.type === 'video' 
-                ? `<video controls><source src="${CONFIG.API_URL}${item.filepath}" /></video>`
+              ${item.type === 'video'
+                ? `<video><source src="${CONFIG.API_URL}${item.filepath}" /></video>`
                 : `<img src="${CONFIG.API_URL}${item.filepath}" alt="${item.title}" />`
               }
               <div class="portfolio-overlay">
@@ -248,21 +251,43 @@
         `).join('');
       }
 
-      function filterPortfolio(category) {
+      function filterPortfolio(category, button) {
         currentFilter = category;
-        
-        // Update active button
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-          btn.classList.remove('active');
-        });
-        event.target.classList.add('active');
-
-        // Reload display
-        loadPortfolio();
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        displayPortfolio();
       }
+
+      function openLightbox(index) {
+        const item = visibleItems[index];
+        const lightbox = document.getElementById('lightbox');
+        const content = lightbox.querySelector('.lightbox-content');
+        const src = `${CONFIG.API_URL}${item.filepath}`;
+        content.innerHTML = item.type === 'video'
+          ? `<video controls autoplay src="${src}"></video>`
+          : `<img src="${src}" alt="${item.title}" />`;
+        lightbox.hidden = false;
+      }
+
+      function closeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        lightbox.hidden = true;
+        lightbox.querySelector('.lightbox-content').innerHTML = '';
+      }
+
+      document.getElementById('lightbox').addEventListener('click', (event) => {
+        if (event.target.id === 'lightbox' || event.target.classList.contains('lightbox-close')) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeLightbox();
+      });
 
       function formatCategory(category) {
         const labels = {
+          'showings': 'Showings',
           'interior': 'Interior',
           'exterior': 'Exterior',
           'wide-angle': 'Wide Angle',

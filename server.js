@@ -77,6 +77,8 @@ db.serialize(() => {
     )
   `);
 
+  db.run('ALTER TABLE portfolio ADD COLUMN sortOrder INTEGER DEFAULT 0', () => {});
+
   db.run(`
     CREATE TABLE IF NOT EXISTS admin_sessions (
       id INTEGER PRIMARY KEY,
@@ -144,7 +146,7 @@ function verifyAdmin(req, res, next) {
 
 // Upload portfolio item
 const uploadFiles = (req, res, next) => {
-  upload.array('file', 20)(req, res, (err) => {
+  upload.array('file', 100)(req, res, (err) => {
     if (err) return res.status(400).json({ error: err.message });
     next();
   });
@@ -165,7 +167,7 @@ app.post('/api/admin/upload', verifyAdmin, uploadFiles, async (req, res) => {
       const itemTitle = title || file.originalname;
       const id = await new Promise((resolve, reject) => {
         db.run(
-          'INSERT INTO portfolio (filename, filepath, category, title, type) VALUES (?, ?, ?, ?, ?)',
+          'INSERT INTO portfolio (filename, filepath, category, title, type, sortOrder) VALUES (?, ?, ?, ?, ?, (SELECT COALESCE(MAX(sortOrder), 0) + 1 FROM portfolio))',
           [file.filename, filepath, category, itemTitle, type],
           function (err) {
             if (err) return reject(err);
@@ -184,7 +186,7 @@ app.post('/api/admin/upload', verifyAdmin, uploadFiles, async (req, res) => {
 // Get portfolio items
 app.get('/api/portfolio', (req, res) => {
   db.all(
-    'SELECT * FROM portfolio ORDER BY uploadedAt DESC',
+    'SELECT * FROM portfolio ORDER BY sortOrder ASC, uploadedAt DESC',
     (err, rows) => {
       if (err) return res.status(500).json({ error: 'Failed to fetch portfolio' });
       res.json(rows || []);
@@ -196,7 +198,7 @@ app.get('/api/portfolio', (req, res) => {
 app.get('/api/portfolio/:category', (req, res) => {
   const { category } = req.params;
   db.all(
-    'SELECT * FROM portfolio WHERE category = ? ORDER BY uploadedAt DESC',
+    'SELECT * FROM portfolio WHERE category = ? ORDER BY sortOrder ASC, uploadedAt DESC',
     [category],
     (err, rows) => {
       if (err) return res.status(500).json({ error: 'Failed to fetch portfolio' });
@@ -206,6 +208,36 @@ app.get('/api/portfolio/:category', (req, res) => {
 });
 
 // Delete portfolio item
+app.post('/api/admin/portfolio/order', verifyAdmin, (req, res) => {
+  const ids = req.body.ids;
+  if (!Array.isArray(ids) || !ids.every((id) => Number.isInteger(id))) {
+    return res.status(400).json({ error: 'ids must be a list of item ids' });
+  }
+
+  db.serialize(() => {
+    db.run('BEGIN');
+    ids.forEach((id, index) => {
+      db.run('UPDATE portfolio SET sortOrder = ? WHERE id = ?', [index + 1, id]);
+    });
+    db.run('COMMIT', (err) => {
+      if (err) return res.status(500).json({ error: 'Failed to save order' });
+      res.json({ success: true });
+    });
+  });
+});
+
+app.delete('/api/admin/portfolio', verifyAdmin, (req, res) => {
+  db.all('SELECT filepath FROM portfolio', (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Failed to delete' });
+
+    db.run('DELETE FROM portfolio', (err) => {
+      if (err) return res.status(500).json({ error: 'Failed to delete' });
+      rows.forEach((row) => unlink(join(__dirname, row.filepath), () => {}));
+      res.json({ success: true, deleted: rows.length });
+    });
+  });
+});
+
 app.delete('/api/admin/portfolio/:id', verifyAdmin, (req, res) => {
   const { id } = req.params;
 

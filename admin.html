@@ -336,6 +336,7 @@
               <label for="category">Category *</label>
               <select id="category" required>
                 <option value="">Select category</option>
+                <option value="showings">Showings</option>
                 <option value="interior">Interior Shot</option>
                 <option value="exterior">Exterior Shot</option>
                 <option value="wide-angle">Wide Angle Shot</option>
@@ -368,6 +369,10 @@
       <!-- Manage Tab -->
       <div id="manage" class="tab-content">
         <h2>Portfolio Items</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+          <p style="color: #666; font-size: 0.9rem; margin: 0;">Drag photos to reorder. The public page follows this order.</p>
+          <button class="delete-btn" style="width: auto; padding: 0.6rem 1.2rem;" onclick="deleteAll()">Delete All</button>
+        </div>
         <div id="portfolioList" class="portfolio-grid">
           <div class="loading">
             <div class="spinner"></div>
@@ -489,8 +494,8 @@
         }
 
         list.innerHTML = items.map(item => `
-          <div class="portfolio-item">
-            ${item.type === 'video' 
+          <div class="portfolio-item" draggable="true" data-id="${item.id}">
+            ${item.type === 'video'
               ? `<video class="portfolio-thumb" controls><source src="${CONFIG.API_URL}${item.filepath}" /></video>`
               : `<img src="${CONFIG.API_URL}${item.filepath}" alt="${item.title}" class="portfolio-thumb" />`
             }
@@ -519,6 +524,74 @@
           loadPortfolio();
         } else {
           alert('Delete failed');
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    let draggedId = null;
+    const portfolioList = document.getElementById('portfolioList');
+
+    portfolioList.addEventListener('dragstart', (event) => {
+      const card = event.target.closest('.portfolio-item');
+      if (!card) return;
+      draggedId = card.dataset.id;
+      event.dataTransfer.effectAllowed = 'move';
+    });
+
+    portfolioList.addEventListener('dragover', (event) => {
+      const dragged = portfolioList.querySelector(`.portfolio-item[data-id="${draggedId}"]`);
+      const target = event.target.closest('.portfolio-item');
+      if (!dragged || !target) return;
+      event.preventDefault();
+      if (target === dragged) return;
+      const draggedIsBefore = dragged.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING;
+      portfolioList.insertBefore(dragged, draggedIsBefore ? target.nextSibling : target);
+    });
+
+    portfolioList.addEventListener('drop', (event) => {
+      if (!draggedId) return;
+      event.preventDefault();
+      draggedId = null;
+      saveOrder();
+    });
+
+    portfolioList.addEventListener('dragend', () => {
+      draggedId = null;
+    });
+
+    async function saveOrder() {
+      const ids = Array.from(portfolioList.querySelectorAll('.portfolio-item')).map(card => Number(card.dataset.id));
+      try {
+        const response = await fetch(CONFIG.API_URL + '/api/admin/portfolio/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ ids })
+        });
+        if (!response.ok) {
+          alert('Could not save the new order');
+          loadPortfolio();
+        }
+      } catch (error) {
+        alert('Error saving order: ' + error.message);
+        loadPortfolio();
+      }
+    }
+
+    async function deleteAll() {
+      if (!confirm('Delete ALL portfolio items? This cannot be undone.')) return;
+
+      try {
+        const response = await fetch(CONFIG.API_URL + '/api/admin/portfolio', {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          loadPortfolio();
+        } else {
+          alert('Delete all failed');
         }
       } catch (error) {
         alert('Error: ' + error.message);
