@@ -466,7 +466,7 @@
           document.getElementById('uploadForm').reset();
           loadPortfolio();
         } else {
-          const error = await response.json();
+          const error = await response.json().catch(() => ({ error: `server returned status ${response.status}` }));
           showMessage('uploadMessage', 'Upload failed: ' + error.error, 'error');
         }
       } catch (error) {

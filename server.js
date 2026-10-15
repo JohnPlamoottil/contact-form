@@ -143,7 +143,14 @@ function verifyAdmin(req, res, next) {
 }
 
 // Upload portfolio item
-app.post('/api/admin/upload', verifyAdmin, upload.array('file', 20), async (req, res) => {
+const uploadFiles = (req, res, next) => {
+  upload.array('file', 20)(req, res, (err) => {
+    if (err) return res.status(400).json({ error: err.message });
+    next();
+  });
+};
+
+app.post('/api/admin/upload', verifyAdmin, uploadFiles, async (req, res) => {
   if (!req.files?.length) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
