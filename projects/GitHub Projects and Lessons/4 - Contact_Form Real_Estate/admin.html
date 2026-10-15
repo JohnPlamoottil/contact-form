@@ -352,9 +352,10 @@
               <label for="file">File (JPG, PNG, MP4, MOV) *</label>
               <input 
                 type="file" 
-                id="file" 
-                accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" 
-                required 
+                id="file"
+                multiple
+                accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime"
+                required
               />
             </div>
 
@@ -439,18 +440,18 @@
       event.preventDefault();
       const category = document.getElementById('category').value;
       const title = document.getElementById('title').value;
-      const file = document.getElementById('file').files[0];
+      const files = Array.from(document.getElementById('file').files);
 
-      if (!file) return;
+      if (!files.length) return;
 
       const formData = new FormData();
-      formData.append('file', file);
+      files.forEach(file => formData.append('file', file));
       formData.append('category', category);
-      formData.append('title', title || file.name);
+      formData.append('title', title);
 
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Uploading...';
+      submitBtn.textContent = `Uploading ${files.length} file${files.length > 1 ? 's' : ''}...`;
 
       try {
         const response = await fetch(CONFIG.API_URL + '/api/admin/upload', {
@@ -460,7 +461,8 @@
         });
 
         if (response.ok) {
-          showMessage('uploadMessage', 'Upload successful!', 'success');
+          const items = await response.json();
+          showMessage('uploadMessage', `Uploaded ${items.length} file${items.length > 1 ? 's' : ''} successfully!`, 'success');
           document.getElementById('uploadForm').reset();
           loadPortfolio();
         } else {

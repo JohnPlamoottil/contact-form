@@ -143,30 +143,35 @@ function verifyAdmin(req, res, next) {
 }
 
 // Upload portfolio item
-app.post('/api/admin/upload', verifyAdmin, upload.single('file'), (req, res) => {
-  if (!req.file) {
+app.post('/api/admin/upload', verifyAdmin, upload.array('file', 20), async (req, res) => {
+  if (!req.files?.length) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
   const { category, title } = req.body;
-  const type = req.file.mimetype.startsWith('video') ? 'video' : 'image';
-  const filepath = `/uploads/portfolio/${req.file.filename}`;
 
-  db.run(
-    'INSERT INTO portfolio (filename, filepath, category, title, type) VALUES (?, ?, ?, ?, ?)',
-    [req.file.filename, filepath, category, title, type],
-    function(err) {
-      if (err) return res.status(500).json({ error: 'Failed to save to database' });
-      res.json({
-        id: this.lastID,
-        filename: req.file.filename,
-        filepath,
-        category,
-        title,
-        type
+  try {
+    const items = [];
+    for (const file of req.files) {
+      const type = file.mimetype.startsWith('video') ? 'video' : 'image';
+      const filepath = `/uploads/portfolio/${file.filename}`;
+      const itemTitle = title || file.originalname;
+      const id = await new Promise((resolve, reject) => {
+        db.run(
+          'INSERT INTO portfolio (filename, filepath, category, title, type) VALUES (?, ?, ?, ?, ?)',
+          [file.filename, filepath, category, itemTitle, type],
+          function (err) {
+            if (err) return reject(err);
+            resolve(this.lastID);
+          }
+        );
       });
+      items.push({ id, filename: file.filename, filepath, category, title: itemTitle, type });
     }
-  );
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to save to database' });
+  }
 });
 
 // Get portfolio items
