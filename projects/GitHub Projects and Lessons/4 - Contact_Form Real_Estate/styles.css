@@ -639,3 +639,9 @@ textarea {
 .lightbox-close:hover {
   color: #d4af37;
 }
+
+@media (max-width: 600px) {
+  .credentials-logo {
+    max-width: 100%;
+  }
+}
