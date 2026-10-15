@@ -495,7 +495,7 @@
             <div class="portfolio-info">
               <div class="portfolio-category">${item.category}</div>
               <div class="portfolio-title">${item.title || 'Untitled'}</div>
-              <button class="delete-btn" onclick="deleteItem(${item.id})">Delete</button>
+              <button class="delete-btn" onclick="deleteItem('${item.id}')">Delete</button>
             </div>
           </div>
         `).join('');

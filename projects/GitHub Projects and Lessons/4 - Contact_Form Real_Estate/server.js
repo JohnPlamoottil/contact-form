@@ -220,6 +220,4 @@ app.post('/api/admin/logout', verifyAdmin, (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
   console.log(`Admin panel at http://localhost:${PORT}/admin.html`);
-  console.log(`Admin Username: ${ADMIN_USERNAME}`);
-  console.log(`Admin Password: ${ADMIN_PASSWORD}`);
 });
